@@ -1,0 +1,29 @@
+---
+title: "Developing Data Products Week 2 Assignment"
+author: "Cherylyn Ee"
+date: "24 October 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## States in Malaysia
+```{r, results = "hide", include = FALSE}
+library(dplyr)
+library(leaflet)
+```
+
+```{r, echo = FALSE, message = FALSE}
+msia_state <- data.frame(name = c("Perak" ,"Kedah", "Terengganu", "Sarawak", "Melaka", "Selangor", "Pahang" ,"Sabah" ,"Kelantan" ,"Negeri Sembilan", "Penang","Perlis","Johor"),
+                        lat = c(4.5921, 6.1184, 5.3117, 1.5533 , 2.194, 3.509247, 3.974341, 5.420404, 6.125397,2.731813, 5.285153, 6.443589, 1.9344),
+                        lng = c(101.0901, 100.3685, 103.1324, 110.3592,102.2491, 101.524803, 102.438057, 116.796783, 102.238068, 102.252502, 100.456238, 100.216599, 103.358727))
+msia_state$stata <- paste0("<p>",msia_state$name,"<br />",msia_state$lat,", ",msia_state$lng,"</p>")
+msia_state %>%
+  leaflet() %>%
+  addTiles() %>%
+  addMarkers(popup = msia_state$stata)
+```
+
+
