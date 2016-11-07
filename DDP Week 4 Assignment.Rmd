@@ -1,0 +1,56 @@
+---
+title: "DDP Week 4 Assignment"
+author: "Cherylyn Ee"
+date: "11/6/2016"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, cache = TRUE)
+```
+
+## Introduction
+
+This presentation is part of the Course Project for Developing Data Products Week 4.
+Explanation in the slides can be used as guidance for users on ways to use the Shiny application and the data used to create the Shiny application.
+
+The app developed is available in the link below:
+(https://cherylynee.shinyapps.io/DDP_CourseAssignment/)
+
+Source code for ui.R and server.R is available in the link below:
+(https://github.com/cherylyn-ee/Developing-Data-Products)
+
+## Best Match College Finder
+
+This app helps you to select the best match college according to criteria below:
+
+- Outstate: No of outstate students
+- Private: Public/ private college indicator
+- Cost: Personal + Room & Board Costs
+- Top25perc: New students from top 25 % of high school class   
+- Apps: Number of applications received
+
+The app then predicts the graduation rate based on this input and displays tab - "Predict Graduation Rate"
+
+## College Data
+Data used for the application is from "College" data from the ISLR" package. The data contains statistics for a large number of US Colleges from the 1995 issue of US News and World Report.
+It has 777 observations and 18 variables of which 6 were used - Private, Outstate, Cost (Personal + Room & Board Cost), Top25perc, & Apps.
+```{r college1, echo = TRUE}
+library(ISLR); data("College")
+head(College)
+```
+
+## Visual of Predicted Data
+The method used for predicting graduation rate is 'gbm' - boosting with trees. Plot of predicted grad rate vs actual grade rate.
+
+```{r college2, echo = FALSE, warning=FALSE, message=FALSE}
+library(ISLR); data("College");library(ggplot2);
+library(caret)
+College2 <- College
+College2$Cost <- College$Personal + College$Room.Board
+intrain<-createDataPartition(y=College2$Grad.Rate, p=0.7, list=FALSE)
+trainingset<-College2[intrain, ]; testingset<-College2[-intrain, ]
+model1 <- train(Grad.Rate ~ Outstate + Top25perc + Apps + Cost + Private , method='gbm', data=trainingset, verbose=FALSE) 
+qplot(predict(model1, testingset), Grad.Rate, data = testingset)
+```
+
